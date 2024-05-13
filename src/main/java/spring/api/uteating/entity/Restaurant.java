@@ -1,5 +1,6 @@
 package spring.api.uteating.entity;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,6 +36,7 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant")
     private List<DishTypeEntity> dishTypeList;
 
+    @Nullable
     @OneToMany(mappedBy = "restaurant")
     private List<RestaurantWorkingTime> availableDateTime;
 
