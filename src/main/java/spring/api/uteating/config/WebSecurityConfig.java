@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import spring.api.uteating.filter.JwtAuthFilter;
 import spring.api.uteating.service.UserServiceImpl;
 
 import java.util.ArrayList;
@@ -28,6 +29,9 @@ import java.util.List;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
+
+    @Autowired
+    private JwtAuthFilter authFilter;
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -55,8 +59,13 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/api/non-auth/**").permitAll()
+                .authorizeHttpRequests().requestMatchers("/api/admin/**").hasAnyAuthority("ADMIN")
+                .and()
+                .authorizeHttpRequests().requestMatchers("/api/auth/**").permitAll()
+                .and()
+                .authorizeHttpRequests().requestMatchers("/**").permitAll()
+                .and()
+                .authorizeHttpRequests().requestMatchers("/api/admin/new/**").hasAnyAuthority("ADMIN", "CREATOR")
                 .and()
                 .authorizeHttpRequests().requestMatchers("/api/auth/new").hasAnyAuthority("ADMIN", "CREATOR")
                 .and()
@@ -64,14 +73,11 @@ public class WebSecurityConfig {
                 .and()
                 .authorizeHttpRequests().requestMatchers("/api/auth/delete/**").hasAnyAuthority("ADMIN")
                 .and()
-                .authorizeHttpRequests().requestMatchers("/api/auth/**").permitAll()
-                .and()
-                .authorizeHttpRequests().requestMatchers("/**").permitAll()
-                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider())
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
