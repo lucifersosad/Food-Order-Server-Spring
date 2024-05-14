@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import spring.api.uteating.entity.Role;
@@ -15,6 +16,7 @@ import spring.api.uteating.model.SignUpDTO;
 import spring.api.uteating.model.UserModel;
 import spring.api.uteating.repository.RoleRepository;
 import spring.api.uteating.repository.UserRepository;
+import spring.api.uteating.service.JwtService;
 
 import java.util.Collections;
 
@@ -32,6 +34,10 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtService jwtService;
+
     @GetMapping("/welcome")
     public String welcome() {
         return "Welcome bitch";
@@ -66,4 +72,14 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/generateToken")
+    public String authenticateAndGetToken(@RequestParam("username") String username,
+                                          @RequestParam("password") String password) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        if (authentication.isAuthenticated()) {
+            return jwtService.generateToken(username);
+        } else {
+            throw new UsernameNotFoundException("invalid user request !");
+        }
+    }
 }
