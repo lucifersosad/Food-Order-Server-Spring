@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import spring.api.uteating.entity.Role;
 import spring.api.uteating.entity.User;
+import spring.api.uteating.model.SignInDTO;
 import spring.api.uteating.model.SignUpDTO;
 import spring.api.uteating.model.UserModel;
 import spring.api.uteating.repository.RoleRepository;
@@ -73,11 +74,10 @@ public class AuthController {
     }
 
     @PostMapping("/generateToken")
-    public String authenticateAndGetToken(@RequestParam("username") String username,
-                                          @RequestParam("password") String password) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+    public String authenticateAndGetToken(@RequestBody SignInDTO authRequest) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsernameOrEmail(), authRequest.getPassword()));
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(username);
+            return jwtService.generateToken(authRequest.getUsernameOrEmail());
         } else {
             throw new UsernameNotFoundException("invalid user request !");
         }
