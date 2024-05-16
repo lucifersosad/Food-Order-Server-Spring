@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -30,6 +31,8 @@ public class User implements Serializable {
 
     private String gender;
 
+    private String phone;
+
     @Column(name = "avatar_url")
     private String avatarURL;
 
@@ -37,6 +40,12 @@ public class User implements Serializable {
 
     @Column(columnDefinition = "BOOLEAN")
     private Boolean enabled;
+
+    @OneToMany(mappedBy = "user")
+    private List<Product> products;
+
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
