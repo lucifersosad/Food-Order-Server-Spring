@@ -22,4 +22,9 @@ public class ProductController {
     public ResponseEntity<List<ProductModel>> getListProduct() {
         return ResponseEntity.ok(productService.getAllProduct());
     }
+
+    @GetMapping("/filter")
+    public String filterProduct(@RequestParam String type) {
+        return "Có cc";
+    }
 }
