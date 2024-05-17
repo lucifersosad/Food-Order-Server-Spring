@@ -82,7 +82,7 @@ public class ProductServiceImpl implements IProductService {
             for (Comment comment : product.getComments()) {
                 totalStars += comment.getRating();
             }
-            averageRating = totalStars / commentCount;
+            averageRating = (commentCount > 0) ? totalStars / commentCount : 0.0;
         }
 
         productModel.setRatingStar(averageRating);
