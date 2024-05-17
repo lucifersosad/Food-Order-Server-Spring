@@ -24,7 +24,7 @@ public class ProductController {
     }
 
     @GetMapping("/filter")
-    public String filterProduct(@RequestParam String type) {
-        return "Có cc";
+    public ResponseEntity<List<ProductModel>> filterProduct(@RequestParam String type) {
+        return ResponseEntity.ok(productService.getProductsByType(type));
     }
 }

@@ -13,6 +13,7 @@ import spring.api.uteating.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements IProductService {
@@ -31,9 +32,17 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
+    public List<ProductModel> getProductsByType(String type) {
+        return productRepository.findByType(type)
+                .stream()
+                .map(this::convertToProductModel)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<ProductModel> getAllProduct() {
         List<ProductModel> productModels = new ArrayList<>();
-        List<Product> products = findAll();
+        List<Product> products = productRepository.findAll();
         for (Product product : products) {
             ProductModel productModel = getProductById(product.getId());
             productModels.add(productModel);
@@ -63,6 +72,24 @@ public class ProductServiceImpl implements IProductService {
             return productModel;
         }
         return null;
+    }
+
+    private ProductModel convertToProductModel(Product product) {
+        ProductModel productModel = new ProductModel();
+        BeanUtils.copyProperties(product, productModel);
+        productModel.setProductId(String.valueOf(product.getId()));
+
+        double totalStars = 0.0;
+        int commentCount = product.getComments().size();
+        for (Comment comment : product.getComments()) {
+            totalStars += comment.getRating();
+        }
+        double averageRating = (commentCount > 0) ? totalStars / commentCount : 0.0;
+        productModel.setRatingStar(averageRating);
+
+        productModel.setRatingAmount(commentCount);
+        productModel.setPublisherId(String.valueOf(product.getUser().getUserId()));
+        return productModel;
     }
 
     @Override
