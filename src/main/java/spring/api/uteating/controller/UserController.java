@@ -15,6 +15,7 @@ import spring.api.uteating.entity.Product;
 import spring.api.uteating.entity.User;
 import spring.api.uteating.exception.ProductException;
 import spring.api.uteating.model.ProductDTO;
+import spring.api.uteating.model.ProductModel;
 import spring.api.uteating.model.UserModel;
 import spring.api.uteating.service.IProductService;
 import spring.api.uteating.service.UserServiceImpl;
@@ -69,9 +70,9 @@ public class UserController {
             Product product = new Product();
             BeanUtils.copyProperties(productDTO, product);
             Product savedProduct = productService.addProduct(product, userId);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+            return ResponseEntity.status(HttpStatus.CREATED).body(productService.convertToProductModel(savedProduct));
         } catch (Exception e) {
-            throw new ProductException("An error occurred while adding the product");
+            throw new ProductException(e.getMessage());
         }
     }
 }

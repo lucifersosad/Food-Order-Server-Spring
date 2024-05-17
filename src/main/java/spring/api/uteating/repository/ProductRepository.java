@@ -11,6 +11,9 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    @Query(value = "SELECT * FROM product where LOWER(product_type) = LOWER(:type)", nativeQuery = true)
+    @Query(value = "SELECT p FROM Product p where LOWER(p.productType) = LOWER(:type)")
     List<Product> findByType(@Param("type") String type);
+
+    @Query("SELECT p FROM Product p WHERE LOWER(p.productName) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<Product> findByKeyword(@Param("keyword") String keyword);
 }

@@ -27,4 +27,9 @@ public class ProductController {
     public ResponseEntity<List<ProductModel>> filterProduct(@RequestParam String type) {
         return ResponseEntity.ok(productService.getProductsByType(type));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductModel>> searchProduct(@RequestParam String keyword) {
+        return ResponseEntity.ok(productService.getProductsByKeyword(keyword));
+    }
 }

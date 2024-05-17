@@ -24,11 +24,11 @@ public class ProductServiceImpl implements IProductService {
     UserRepository userRepository;
 
     @Override
-    public Product addProduct(Product product, String userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        product.setUser(user);
-        return productRepository.save(product);
+    public List<ProductModel> getProductsByKeyword(String keyword) {
+        return productRepository.findByKeyword(keyword)
+                .stream()
+                .map(this::convertToProductModel)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -55,38 +55,37 @@ public class ProductServiceImpl implements IProductService {
         Optional<Product> productOptional = productRepository.findById(productId);
         if (productOptional.isPresent()) {
             Product product = productOptional.get();
-            ProductModel productModel = new ProductModel();
-            BeanUtils.copyProperties(product, productModel);
-            productModel.setProductId(String.valueOf(product.getId()));
-
-            double totalStars = 0.0;
-            int commentCount = product.getComments().size();
-            for (Comment comment : product.getComments()) {
-                totalStars += comment.getRating();
-            }
-            double averageRating = (commentCount > 0) ? totalStars / commentCount : 0.0;
-            productModel.setRatingStar(averageRating);
-
-            productModel.setRatingAmount(product.getComments().size());
-            productModel.setPublisherId(String.valueOf(product.getUser().getUserId()));
-            return productModel;
+            return convertToProductModel(product);
         }
         return null;
     }
 
-    private ProductModel convertToProductModel(Product product) {
+    @Override
+    public Product addProduct(Product product, String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        product.setUser(user);
+        return productRepository.save(product);
+    }
+
+    @Override
+    public ProductModel convertToProductModel(Product product) {
         ProductModel productModel = new ProductModel();
         BeanUtils.copyProperties(product, productModel);
         productModel.setProductId(String.valueOf(product.getId()));
 
-        double totalStars = 0.0;
-        int commentCount = product.getComments().size();
-        for (Comment comment : product.getComments()) {
-            totalStars += comment.getRating();
+        int commentCount = 0;
+        double averageRating = 0.0;
+        if (product.getComments() != null) {
+            double totalStars = 0.0;
+            commentCount = product.getComments().size();
+            for (Comment comment : product.getComments()) {
+                totalStars += comment.getRating();
+            }
+            averageRating = totalStars / commentCount;
         }
-        double averageRating = (commentCount > 0) ? totalStars / commentCount : 0.0;
-        productModel.setRatingStar(averageRating);
 
+        productModel.setRatingStar(averageRating);
         productModel.setRatingAmount(commentCount);
         productModel.setPublisherId(String.valueOf(product.getUser().getUserId()));
         return productModel;
