@@ -1,29 +1,28 @@
 package spring.api.uteating.entity;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Time;
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RestaurantWorkingTime {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int week_day;
+    private String commentDetail;
 
-    private Time open_hour;
-
-    private Time close_hour;
+    private float rating;
 
     @ManyToOne
-    @JoinColumn(name="restaurant_id")
-    private Restaurant restaurant;
+    @JoinColumn(name="product_id")
+    private Product product;
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 }
