@@ -3,11 +3,14 @@ package spring.api.uteating.service;
 import spring.api.uteating.entity.Product;
 import spring.api.uteating.model.ProductModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface IProductService {
 
     Product addProduct(Product product, String userId);
+
+    List<ProductModel> getProductsByType(String type);
 
     List<ProductModel> getAllProduct();
 
