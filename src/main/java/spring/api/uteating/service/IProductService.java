@@ -10,11 +10,15 @@ public interface IProductService {
 
     Product addProduct(Product product, String userId);
 
+    List<ProductModel> getProductsByKeyword(String keyword);
+
     List<ProductModel> getProductsByType(String type);
 
     List<ProductModel> getAllProduct();
 
     ProductModel getProductById(Long productId);
+
+    ProductModel convertToProductModel(Product product);
 
     List<Product> findAll();
 
