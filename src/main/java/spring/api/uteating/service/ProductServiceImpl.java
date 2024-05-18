@@ -7,6 +7,7 @@ import spring.api.uteating.entity.Comment;
 import spring.api.uteating.entity.Product;
 import spring.api.uteating.entity.User;
 import spring.api.uteating.model.ProductCartModel;
+import spring.api.uteating.model.ProductDTO;
 import spring.api.uteating.model.ProductModel;
 import spring.api.uteating.repository.ProductRepository;
 import spring.api.uteating.repository.UserRepository;
@@ -56,6 +57,16 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
+    public List<ProductModel> getProductByUserId(String publisherId) {
+        List<ProductModel> productModels = productRepository.findProductsByPublisherId(publisherId)
+                .stream()
+                .map(this::convertToProductModel)
+                .collect(Collectors.toList());
+        Collections.reverse(productModels);
+        return productModels;
+    }
+
+    @Override
     public ProductModel getProductById(Long productId) {
         Optional<Product> productOptional = productRepository.findById(productId);
         if (productOptional.isPresent()) {
@@ -80,6 +91,18 @@ public class ProductServiceImpl implements IProductService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         product.setUser(user);
         return productRepository.save(product);
+    }
+
+    @Override
+    public String updateProduct(ProductDTO productDTO) {
+        Optional<Product> optProduct = findById(Long.parseLong(productDTO.getProductId()));
+        if (optProduct.isPresent()) {
+            Product product = optProduct.get();
+            BeanUtils.copyProperties(productDTO, product);
+            save(product);
+            return "Update product successfully";
+        }
+        return "Product not found";
     }
 
     @Override
@@ -133,5 +156,9 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public void deleteAll() {
         productRepository.deleteAll();
+    }
+
+    public Optional<Product> findById(Long aLong) {
+        return productRepository.findById(aLong);
     }
 }

@@ -2,6 +2,7 @@ package spring.api.uteating.service;
 
 import spring.api.uteating.entity.Product;
 import spring.api.uteating.model.ProductCartModel;
+import spring.api.uteating.model.ProductDTO;
 import spring.api.uteating.model.ProductModel;
 
 import java.util.ArrayList;
@@ -19,7 +20,11 @@ public interface IProductService {
 
     List<ProductModel> getAllProduct();
 
+    List<ProductModel> getProductByUserId(String publisherId);
+
     ProductModel getProductById(Long productId);
+
+    String updateProduct(ProductDTO productDTO);
 
     ProductModel convertToProductModel(Product product);
 

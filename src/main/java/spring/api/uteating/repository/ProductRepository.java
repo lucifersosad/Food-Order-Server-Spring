@@ -20,4 +20,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("Select new spring.api.uteating.model.ProductCartModel (p.id, p.productName, p.productImage1, p.productPrice, p.remainAmount) from Product p where p.id = :productId")
     ProductCartModel findProductCartByProductId(@Param("productId") Long productId);
+
+    @Query(value = "SELECT p FROM Product p where p. user.userId = :publisherId")
+    List<Product> findProductsByPublisherId(@Param("publisherId") String publisherId);
 }

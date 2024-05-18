@@ -56,7 +56,17 @@ public class UserController {
         }
     }
 
-    @PostMapping("/addProduct")
+    @GetMapping("/products")
+    public ResponseEntity<?> listProductsByPublisher(@RequestParam String publisherId) {
+        try {
+            List<ProductModel> productModels = productService.getProductByUserId(publisherId);
+            return ResponseEntity.ok(productModels);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/product/add")
     public ResponseEntity<?> addProduct(@Valid @RequestBody ProductDTO productDTO, @RequestParam String userId, BindingResult result) {
         if (result.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
@@ -71,6 +81,24 @@ public class UserController {
             BeanUtils.copyProperties(productDTO, product);
             Product savedProduct = productService.addProduct(product, userId);
             return ResponseEntity.status(HttpStatus.CREATED).body(productService.convertToProductModel(savedProduct));
+        } catch (Exception e) {
+            throw new ProductException(e.getMessage());
+        }
+    }
+
+    @PutMapping("/product/edit")
+    public ResponseEntity<?> updateProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult result) {
+        if (result.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            for (FieldError error : result.getFieldErrors()) {
+                errors.put(error.getField(), error.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            String message = productService.updateProduct(productDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(message);
         } catch (Exception e) {
             throw new ProductException(e.getMessage());
         }
