@@ -34,10 +34,12 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<ProductModel> getProductsByType(String type) {
-        return productRepository.findByType(type)
+        List<ProductModel> productModels = productRepository.findByType(type)
                 .stream()
                 .map(this::convertToProductModel)
                 .collect(Collectors.toList());
+        Collections.reverse(productModels);
+        return productModels;
     }
 
     @Override
