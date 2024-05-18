@@ -67,7 +67,7 @@ public class UserController {
     }
 
     @PostMapping("/product/add")
-    public ResponseEntity<?> addProduct(@Valid @RequestBody ProductDTO productDTO, @RequestParam String userId, BindingResult result) {
+    public ResponseEntity<?> addProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult result) {
         if (result.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
             for (FieldError error : result.getFieldErrors()) {
@@ -79,7 +79,7 @@ public class UserController {
         try {
             Product product = new Product();
             BeanUtils.copyProperties(productDTO, product);
-            Product savedProduct = productService.addProduct(product, userId);
+            Product savedProduct = productService.addProduct(product, productDTO.getPublisherId());
             return ResponseEntity.status(HttpStatus.CREATED).body(productService.convertToProductModel(savedProduct));
         } catch (Exception e) {
             throw new ProductException(e.getMessage());
