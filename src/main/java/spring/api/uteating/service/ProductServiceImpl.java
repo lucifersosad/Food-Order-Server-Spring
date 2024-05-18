@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import spring.api.uteating.entity.Comment;
 import spring.api.uteating.entity.Product;
 import spring.api.uteating.entity.User;
+import spring.api.uteating.model.ProductCartModel;
 import spring.api.uteating.model.ProductModel;
 import spring.api.uteating.repository.ProductRepository;
 import spring.api.uteating.repository.UserRepository;
@@ -60,6 +61,15 @@ public class ProductServiceImpl implements IProductService {
         if (productOptional.isPresent()) {
             Product product = productOptional.get();
             return convertToProductModel(product);
+        }
+        return null;
+    }
+
+    @Override
+    public ProductCartModel getProductCartById(Long productId) {
+        Optional<Product> productOptional = productRepository.findById(productId);
+        if (productOptional.isPresent()) {
+            return productRepository.findProductCartByProductId(productId);
         }
         return null;
     }

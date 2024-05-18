@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import spring.api.uteating.entity.Dish;
 import spring.api.uteating.entity.Product;
+import spring.api.uteating.model.ProductCartModel;
 
 import java.util.List;
 
@@ -16,4 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p WHERE LOWER(p.productName) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Product> findByKeyword(@Param("keyword") String keyword);
+
+    @Query("Select new spring.api.uteating.model.ProductCartModel (p.id, p.productName, p.productImage1, p.productPrice, p.remainAmount) from Product p where p.id = :productId")
+    ProductCartModel findProductCartByProductId(@Param("productId") Long productId);
 }
