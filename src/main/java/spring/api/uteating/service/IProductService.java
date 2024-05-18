@@ -24,7 +24,7 @@ public interface IProductService {
 
     ProductModel getProductById(Long productId);
 
-    String updateProduct(ProductDTO productDTO);
+    Product updateProduct(ProductDTO productDTO);
 
     ProductModel convertToProductModel(Product product);
 

@@ -94,15 +94,15 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public String updateProduct(ProductDTO productDTO) {
+    public Product updateProduct(ProductDTO productDTO) {
         Optional<Product> optProduct = findById(Long.parseLong(productDTO.getProductId()));
         if (optProduct.isPresent()) {
             Product product = optProduct.get();
             BeanUtils.copyProperties(productDTO, product);
             save(product);
-            return "Update product successfully";
+            return product;
         }
-        return "Product not found";
+        return null;
     }
 
     @Override

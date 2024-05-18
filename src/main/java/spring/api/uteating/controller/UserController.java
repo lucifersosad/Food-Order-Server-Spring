@@ -97,8 +97,8 @@ public class UserController {
         }
 
         try {
-            String message = productService.updateProduct(productDTO);
-            return ResponseEntity.status(HttpStatus.OK).body(message);
+            Product savedProduct = productService.updateProduct(productDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(productService.convertToProductModel(savedProduct));
         } catch (Exception e) {
             throw new ProductException(e.getMessage());
         }
