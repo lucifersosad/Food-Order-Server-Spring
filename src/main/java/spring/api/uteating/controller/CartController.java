@@ -16,7 +16,7 @@ public class CartController {
     @Autowired
     IProductService productService;
     @GetMapping("/productCart")
-    public ProductCartModel getCartItemById(@RequestParam Long idProduct) {
-        return productService.getProductCartById(idProduct);
+    public ProductCartModel getCartItemById(@RequestParam String idProduct) {
+        return productService.getProductCartById(Long.parseLong(idProduct));
     }
 }
