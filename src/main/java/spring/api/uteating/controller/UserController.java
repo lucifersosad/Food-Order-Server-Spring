@@ -69,11 +69,11 @@ public class UserController {
     @PostMapping("/product/add")
     public ResponseEntity<?> addProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult result) {
         if (result.hasErrors()) {
-            Map<String, String> errors = new HashMap<>();
+            String messageError = "";
             for (FieldError error : result.getFieldErrors()) {
-                errors.put(error.getField(), error.getDefaultMessage());
+                messageError += error.getDefaultMessage() + " ";
             }
-            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(messageError, HttpStatus.BAD_REQUEST);
         }
 
         try {
