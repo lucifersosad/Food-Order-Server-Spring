@@ -25,7 +25,6 @@ public class ProductDTO {
     @Max(value = 10000000, message = "Nhieu nhat 10 trieu")
     private Integer productPrice;
     @NotNull(message = "Số lượng không được để trống")
-    @Min(value = 1, message = "It nhat 1 san pham")
     private Integer remainAmount;
     @NotNull(message = "Mô tả không được để trống")
     private String description;
