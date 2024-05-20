@@ -29,9 +29,6 @@ public class MyUserService implements UserDetails {
         this.authorities = authorities;
     }
 
-    //    public MyUserService(UserEntity user) {
-//        this.user = user;
-//    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
@@ -45,6 +42,10 @@ public class MyUserService implements UserDetails {
     @Override
     public String getUsername() {
         return user.getUsername();
+    }
+
+    public String getEmail() {
+        return user.getEmail();
     }
 
     @Override

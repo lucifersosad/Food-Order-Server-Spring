@@ -22,15 +22,19 @@ public class UserServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
 
-        User user = userRepository.getUserByUsername(username);
+        User user = userRepository.getUserByUsernameOrEmail(usernameOrEmail);
 
         if (user == null) {
             throw new UsernameNotFoundException("Cound not find user");
         }
 
         return new MyUserService(user);
+    }
+
+    public User getUser(String username) {
+        return userRepository.getUserByUsernameOrEmail(username);
     }
 
     public UserModel getUserModel(String idUser) {
