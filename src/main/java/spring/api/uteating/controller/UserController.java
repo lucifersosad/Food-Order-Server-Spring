@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,16 +16,14 @@ import org.springframework.web.bind.annotation.*;
 import spring.api.uteating.entity.Product;
 import spring.api.uteating.entity.User;
 import spring.api.uteating.exception.ProductException;
+import spring.api.uteating.model.ErrorReponse;
 import spring.api.uteating.model.ProductDTO;
 import spring.api.uteating.model.ProductModel;
 import spring.api.uteating.model.UserModel;
 import spring.api.uteating.service.IProductService;
 import spring.api.uteating.service.UserServiceImpl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/user")
@@ -35,10 +35,28 @@ public class UserController {
 
     @Autowired
     IProductService productService;
-
     @GetMapping("/welcome")
     public String welcome() {
         return "Welcome user";
+    }
+
+    boolean isAuthorityUser(String userId, Authentication authentication) {
+        String username = authentication.getName();
+        User authUser = userService.getUser(username);
+        return !authUser.getUserId().equals(userId);
+    }
+
+    @GetMapping("/authority/{userid}")
+    public ResponseEntity<?> authority(@PathVariable ("userid") String userId, Authentication authentication) {
+        try {
+            if (isAuthorityUser(userId, authentication)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorReponse("Ban khong duoc cap quyen"));
+            } else {
+                return ResponseEntity.ok(userService.getUserModel(userId));
+            }
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorReponse(e.getMessage()));
+        }
     }
 
     @GetMapping("/{userid}")
@@ -67,7 +85,7 @@ public class UserController {
     }
 
     @PostMapping("/product/add")
-    public ResponseEntity<?> addProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult result) {
+    public ResponseEntity<?> addProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult result, Authentication authentication) {
         if (result.hasErrors()) {
             String messageError = "";
             for (FieldError error : result.getFieldErrors()) {

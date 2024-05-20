@@ -59,13 +59,13 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<UserModel> loginUser(@RequestParam("username") String username,
+    public ResponseEntity<UserModel> loginUser(@RequestParam("usernameOrEmail") String usernameOrEmail,
                                                @RequestParam("password") String password){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(usernameOrEmail, password));
 
         if (authentication.isAuthenticated()) {
             UserModel userModel = new UserModel();
-            User user = userRepository.getUserByUsername(username);
+            User user = userRepository.getUserByUsernameOrEmail(usernameOrEmail);
             BeanUtils.copyProperties(user, userModel);
             return ResponseEntity.ok(userModel);
         } else {

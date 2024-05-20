@@ -43,6 +43,7 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -61,7 +62,7 @@ public class WebSecurityConfig {
         return http.csrf().disable()
                 .authorizeHttpRequests().requestMatchers("/api/admin/**").permitAll()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/api/user/**").permitAll()
+                .authorizeHttpRequests().requestMatchers("/api/user/**").hasAnyAuthority("ADMIN", "USER")
                 .and()
                 .authorizeHttpRequests().requestMatchers("/api/auth/**").permitAll()
                 .and()
