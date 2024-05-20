@@ -12,5 +12,5 @@ public class UserModel {
     private String email;
     private String avatarURL;
     private String phone;
-    private Set<Role> roles;
+//    private Set<Role> roles;
 }
