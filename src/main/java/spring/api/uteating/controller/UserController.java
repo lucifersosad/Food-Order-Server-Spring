@@ -95,6 +95,7 @@ public class UserController {
         }
 
         try {
+            productDTO.setSold(0);
             Product product = new Product();
             BeanUtils.copyProperties(productDTO, product);
             Product savedProduct = productService.addProduct(product, productDTO.getPublisherId());
@@ -121,4 +122,14 @@ public class UserController {
             throw new ProductException(e.getMessage());
         }
     }
+
+//    @PutMapping("order/confirmOrder")
+//    public ResponseEntity<?> confirmOrder(@Valid @RequestBody List<ProductModel> listProductOrder) {
+//        try {
+//            Product savedProduct = productService.updateProduct(productDTO);
+//            return ResponseEntity.status(HttpStatus.OK).body(productService.convertToProductModel(savedProduct));
+//        } catch (Exception e) {
+//            throw new ProductException(e.getMessage());
+//        }
+//    }
 }
