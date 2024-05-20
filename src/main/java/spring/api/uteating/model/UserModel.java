@@ -8,6 +8,7 @@ import java.util.Set;
 @Data
 public class UserModel {
     private String userId;
+    private String fullName;
     private String username;
     private String email;
     private String avatarURL;
