@@ -85,6 +85,17 @@ public class ProductServiceImpl implements IProductService {
         return null;
     }
 
+//    public List<ProductModel> confirmProducts(List<ProductModel> productModels) {
+//        for (ProductModel productModel : productModels) {
+//            Optional<Product> productOptional = productRepository.findById(Long.parseLong(productModel.getProductId()));
+//            if (productOptional.isPresent()) {
+//                Product product = productOptional.get();
+//                if (productModel.getRemainAmount())
+//                save(product);
+//            }
+//        }
+//    }
+
     @Override
     public Product addProduct(Product product, String userId) {
         User user = userRepository.findById(userId)

@@ -28,6 +28,7 @@ public class ProductDTO {
     private Integer remainAmount;
     @NotNull(message = "Mô tả không được để trống")
     private String description;
+    private int sold;
     @NotNull(message = "Id người bán không được để trống")
     private String publisherId;
 }
