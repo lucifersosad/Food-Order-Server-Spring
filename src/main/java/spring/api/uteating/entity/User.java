@@ -44,9 +44,6 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user")
     private List<Product> products;
 
-    @OneToMany(mappedBy = "user")
-    private List<Comment> comments;
-
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",

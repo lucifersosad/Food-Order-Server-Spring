@@ -103,4 +103,8 @@ public class UserServiceImpl implements UserDetailsService {
     public boolean existsById(String s) {
         return userRepository.existsById(s);
     }
+
+    public Optional<User> findById(String s) {
+        return userRepository.findById(s);
+    }
 }
