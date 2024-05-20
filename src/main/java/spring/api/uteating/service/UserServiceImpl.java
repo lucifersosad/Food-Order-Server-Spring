@@ -59,6 +59,9 @@ public class UserServiceImpl implements UserDetailsService {
                 if (model.getAvatarURL() != null && !model.getAvatarURL().isEmpty()) {
                     user.setAvatarURL(model.getAvatarURL());
                 }
+                if (model.getFullName() != null && !model.getFullName().isEmpty()) {
+                    user.setFullName(model.getFullName());
+                }
                 userRepository.save(user);
                 UserModel userModel = new UserModel();
                 BeanUtils.copyProperties(user, userModel);
