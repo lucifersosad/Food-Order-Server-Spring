@@ -62,7 +62,7 @@ public class WebSecurityConfig {
         return http.csrf().disable()
                 .authorizeHttpRequests().requestMatchers("/api/admin/**").permitAll()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/api/user/**").hasAnyAuthority("ADMIN", "USER")
+                .authorizeHttpRequests().requestMatchers("/api/user/**").permitAll()
                 .and()
                 .authorizeHttpRequests().requestMatchers("/api/auth/**").permitAll()
                 .and()
