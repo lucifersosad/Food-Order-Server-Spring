@@ -27,6 +27,7 @@ public class Product {
     private int remainAmount;
 
     private int sold;
+
     private String description;
 
     private String state;
@@ -39,10 +40,14 @@ public class Product {
 
     private String productImage4;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
-
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
+
+    @Column(name = "rating_star")
+    private Double ratingStar;
+
+    @Column(name = "rating_amount")
+    private int ratingAmount;
+
 }

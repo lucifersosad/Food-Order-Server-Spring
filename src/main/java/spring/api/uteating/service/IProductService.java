@@ -7,6 +7,7 @@ import spring.api.uteating.model.ProductModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public interface IProductService {
 
@@ -39,4 +40,6 @@ public interface IProductService {
     void deleteById(Long aLong);
 
     void deleteAll();
+
+    Optional<Product> findById(Long aLong);
 }

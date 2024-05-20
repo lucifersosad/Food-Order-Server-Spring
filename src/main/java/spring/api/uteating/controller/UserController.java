@@ -1,25 +1,21 @@
 package spring.api.uteating.controller;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import spring.api.uteating.entity.Product;
 import spring.api.uteating.entity.User;
 import spring.api.uteating.exception.ProductException;
-import spring.api.uteating.model.ErrorReponse;
-import spring.api.uteating.model.ProductDTO;
-import spring.api.uteating.model.ProductModel;
-import spring.api.uteating.model.UserModel;
+import spring.api.uteating.model.*;
 import spring.api.uteating.service.IProductService;
 import spring.api.uteating.service.UserServiceImpl;
 
@@ -35,6 +31,7 @@ public class UserController {
 
     @Autowired
     IProductService productService;
+
     @GetMapping("/welcome")
     public String welcome() {
         return "Welcome user";
@@ -123,13 +120,22 @@ public class UserController {
         }
     }
 
-//    @PutMapping("order/confirmOrder")
-//    public ResponseEntity<?> confirmOrder(@Valid @RequestBody List<ProductModel> listProductOrder) {
-//        try {
-//            Product savedProduct = productService.updateProduct(productDTO);
-//            return ResponseEntity.status(HttpStatus.OK).body(productService.convertToProductModel(savedProduct));
-//        } catch (Exception e) {
-//            throw new ProductException(e.getMessage());
-//        }
-//    }
+    @PutMapping("/feedback")
+    public ResponseEntity<?> feedbackUser(@Nullable @RequestParam String userId, @RequestParam int ratingAmount, @RequestParam double ratingStar, @RequestParam String productId) {
+        try {
+            Optional<Product> optionalProduct = productService.findById(Long.parseLong(productId));
+            if (optionalProduct.isPresent()) {
+                Product product = optionalProduct.get();
+                product.setRatingAmount(ratingAmount);
+                product.setRatingStar(ratingStar);
+                productService.save(product);
+                return ResponseEntity.ok(productService.getProductById(Long.parseLong(productId)));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }

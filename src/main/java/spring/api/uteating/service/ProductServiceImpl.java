@@ -3,7 +3,6 @@ package spring.api.uteating.service;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import spring.api.uteating.entity.Comment;
 import spring.api.uteating.entity.Product;
 import spring.api.uteating.entity.User;
 import spring.api.uteating.model.ProductCartModel;
@@ -121,20 +120,6 @@ public class ProductServiceImpl implements IProductService {
         ProductModel productModel = new ProductModel();
         BeanUtils.copyProperties(product, productModel);
         productModel.setProductId(String.valueOf(product.getId()));
-
-        int commentCount = 0;
-        double averageRating = 0.0;
-        if (product.getComments() != null) {
-            double totalStars = 0.0;
-            commentCount = product.getComments().size();
-            for (Comment comment : product.getComments()) {
-                totalStars += comment.getRating();
-            }
-            averageRating = (commentCount > 0) ? totalStars / commentCount : 0.0;
-        }
-
-        productModel.setRatingStar(averageRating);
-        productModel.setRatingAmount(commentCount);
         productModel.setPublisherId(String.valueOf(product.getUser().getUserId()));
         return productModel;
     }
@@ -169,6 +154,7 @@ public class ProductServiceImpl implements IProductService {
         productRepository.deleteAll();
     }
 
+    @Override
     public Optional<Product> findById(Long aLong) {
         return productRepository.findById(aLong);
     }
