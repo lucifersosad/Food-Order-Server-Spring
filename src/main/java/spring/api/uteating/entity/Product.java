@@ -1,7 +1,9 @@
 package spring.api.uteating.entity;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -50,4 +52,6 @@ public class Product {
     @Column(name = "rating_amount")
     private int ratingAmount;
 
+    @Column(name = "is_checked", columnDefinition = "BOOLEAN")
+    private boolean isChecked;
 }

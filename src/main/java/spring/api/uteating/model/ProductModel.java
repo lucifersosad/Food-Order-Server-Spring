@@ -23,4 +23,5 @@ public class ProductModel {
     private int ratingAmount;
     private String publisherId;
     private String state;
+    private boolean isChecked;
 }
