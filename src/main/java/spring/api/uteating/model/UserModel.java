@@ -14,6 +14,6 @@ public class UserModel {
     private String email;
     private String avatarURL;
     private String phone;
-    @JsonProperty("isAdmin")
+    @JsonProperty("admin")
     private boolean isAdmin;
 }
