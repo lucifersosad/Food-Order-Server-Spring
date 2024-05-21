@@ -39,7 +39,6 @@ public class ProductServiceImpl implements IProductService {
                 .stream()
                 .map(this::convertToProductModel)
                 .collect(Collectors.toList());
-        Collections.reverse(productModels);
         return productModels;
     }
 
@@ -61,7 +60,6 @@ public class ProductServiceImpl implements IProductService {
                 .stream()
                 .map(this::convertToProductModel)
                 .collect(Collectors.toList());
-        Collections.reverse(productModels);
         return productModels;
     }
 
