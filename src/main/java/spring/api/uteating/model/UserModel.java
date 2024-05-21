@@ -1,5 +1,6 @@
 package spring.api.uteating.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import spring.api.uteating.entity.Role;
 
@@ -13,5 +14,6 @@ public class UserModel {
     private String email;
     private String avatarURL;
     private String phone;
-//    private Set<Role> roles;
+    @JsonProperty("is_admin")
+    private boolean is_admin;
 }
