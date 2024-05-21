@@ -4,16 +4,21 @@ package spring.api.uteating.service;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import spring.api.uteating.entity.Role;
 import spring.api.uteating.entity.User;
 import spring.api.uteating.model.UserModel;
 import spring.api.uteating.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserDetailsService {
@@ -44,6 +49,11 @@ public class UserServiceImpl implements UserDetailsService {
         User user = getById(idUser);
         UserModel userModel = new UserModel();
         BeanUtils.copyProperties(user, userModel);
+        if (isAdmin(user)) {
+            userModel.setAdmin(true);
+        } else {
+            userModel.setAdmin(false);
+        }
         return userModel;
     }
 
@@ -69,6 +79,17 @@ public class UserServiceImpl implements UserDetailsService {
             }
         }
         return null;
+    }
+
+    boolean isAdmin(User user) {
+        Set<Role> roles = user.getRoles();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : roles) {
+            if (role.getName().equals("ADMIN")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Deprecated
