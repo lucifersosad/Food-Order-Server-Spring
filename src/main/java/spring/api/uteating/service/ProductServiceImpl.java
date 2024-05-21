@@ -45,12 +45,11 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public List<ProductModel> getAllProduct() {
         List<ProductModel> productModels = new ArrayList<>();
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findByAllDesc();
         for (Product product : products) {
             ProductModel productModel = getProductById(product.getId());
             productModels.add(productModel);
         }
-        Collections.reverse(productModels);
         return productModels;
     }
 
